@@ -11,6 +11,7 @@ questions before asking your TAs.*
 
 ## Quick Links
 
+- [Skeleton Code Updates](#skeleton-code-updates)
 - [Game Elements](#game-elements)
 - [Game Representations](#game-representations)
 - [Game Mechanics](#game-mechanics)
@@ -22,6 +23,32 @@ questions before asking your TAs.*
 - [Grading Scheme](#grading-scheme)
 - [FAQ](#faq)
 - [Want To Know More?](#want-to-know-more)
+
+## Skeleton Code Updates
+
+- **09-07**: Revised test cases for more conservative implementations of "all-gems reachable" checks
+
+  As per the discussion in #4, some test cases are not properly designed to handle more conservative implementations of
+  the "all gems reachable" check. The test cases have now been revised and should accommodate for these implementations.
+
+  These changes should not affect your implementation. If any test cases fails after applying the new version of these
+  test cases, please double-check your implementation, and if it appears to be correct, you may open a discussion.
+
+  The following files have been modified:
+
+  - `app/src/test/java/hk/ust/cse/comp3021/pa1`:
+    - `controller/GameBoardControllerTest.java`
+    - `controller/GameControllerTest.java`
+    - `model/GameBoardTest.java`
+
+- **09-05**: Added back the missing IntelliJ Run Configurations
+  
+  These files were previously missing from the repo, and as such the IntelliJ Run Configurations were not present when
+  initially importing the project.
+
+  The following files have been added:
+
+  - All files under `.idea`
 
 ## Game Elements
 
@@ -565,7 +592,7 @@ For your information, there are:
 
 - 86 Sanity Tests
 - 67 Provided Tests
-- 71 Hidden Tests
+- 72 Hidden Tests
 
 ### Plagiarism
 
@@ -573,6 +600,23 @@ We trust that you are familiar with HKUST's Honor Code. If not, refer to
 [this page](https://course.cse.ust.hk/comp3021/#honorcode).
 
 ## FAQ
+
+- *(Added 09-11)* **Q:** What should we do for `GameBoardController.undoMove` if the `prevMove` parameter is *not* an 
+  instance of `MoveResult.Valid.Alive`?
+
+  **A:** It depends on your implementation of `GameBoardController.makeMove`, since a possible implementation of 
+  `makeMove` can involve calling `undoMove` to revert an invalid or dead move. Therefore, there will be no test cases 
+  for `GameBoardController.undoMove` which tests for your handling of `MoveResult.Invalid` or `MoveResult.Valid.Dead`.
+
+  Keep in mind that you should still ensure that the requirements for other related methods are not violated in your
+  implementation. This includes:
+
+  - `GameBoardController.makeMove`
+  - `GameController.processMove`
+  - `GameController.processUndo`
+
+  In other words, your implementation of `GameBoardController.undoMove` should not affect the end result of the
+  aforementioned methods. Refer to the README and Javadoc for the requirements for each of the above method.
 
 - **Q:** I get an error saying `Error: LinkageError occurred while loading main class hk.ust.cse.comp3021.pa.Main`!
 
