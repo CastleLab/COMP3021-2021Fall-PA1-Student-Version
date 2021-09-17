@@ -601,6 +601,26 @@ We trust that you are familiar with HKUST's Honor Code. If not, refer to
 
 ## FAQ
 
+- *(Added 09-17)* **Q:** What should I do if a player performs a `Valid.Dead` move, then tries to undo the move?
+
+  `Valid.Dead` moves are not undoable, so you do not need to do anything. However, if the player lost a life during the
+  `Valid.Dead` move, you should **not** undo decrease in the number of lives.
+
+  In other words, if a player loses a life (from 3 to 2), after an undo, the number of lifes should stay the same (2).
+
+- *(Added 09-17)* **Q:** For two-argument constructor of `EntityCell`, do I need to set the owner of the entity passed
+  in?
+
+  Yes.
+
+- *(Added 09-17)*: **Q:** Sometimes IntelliJ warns me about an object being nullable, but I can guarantee that it can
+  never be `null`! How do I suppress these warnings?
+
+  Common ways to do that include:
+
+  - Throw an exception (e.g. `IllegalStateException`) if the object is `null`
+  - Use `Objects.requireNonNull` to ensure that the object is not `null`
+
 - *(Added 09-11)* **Q:** What should we do for `GameBoardController.undoMove` if the `prevMove` parameter is *not* an 
   instance of `MoveResult.Valid.Alive`?
 
