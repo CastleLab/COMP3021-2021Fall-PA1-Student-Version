@@ -601,6 +601,32 @@ We trust that you are familiar with HKUST's Honor Code. If not, refer to
 
 ## FAQ
 
+Please read the [discussions section](https://github.com/CastleLab/COMP3021-2021Fall-PA1-Student-Version/discussions) to
+see if your question has already been asked/answered before.
+
+- *(Added 09-22)* **Q:** Can I import other classes in my implementation?
+
+  You can import classes in your implementation, with the following caveats:
+
+  - You cannot change the provided Gradle build files `build.gradle.kts`
+  - All sanity tests must still pass
+
+- *(Added 09-22)* **Q:** What is the difference between `GameController.process*()` and `GameBoardController.*Move()` 
+  (for example `GameController.processMove` and `GameBoardController.makeMove`)?
+
+  All methods in `GameController` is intended to be used to mutate all elements of the game state, including the game
+  board, whereas all methods in `GameBoardController` is intended to be used to mutate the `GameBoard` *only*.
+
+  You may also want to refer to 
+  [this discussion](https://github.com/CastleLab/COMP3021-2021Fall-PA1-Student-Version/discussions/13#discussioncomment-1360339)
+  for more information.
+
+- *(Added 09-22)* **Q:** Besides the provided test cases, are there other ways to check whether my implementation is 
+  correct?
+
+  You may design your own maps for this game, and compare whether there are any difference when playing the game using
+  your implementation and provided obfuscated JAR.
+
 - *(Added 09-17)* **Q:** What should I do if a player performs a `Valid.Dead` move, then tries to undo the move?
 
   `Valid.Dead` moves are not undoable, so you do not need to do anything. However, if the player lost a life during the
