@@ -604,6 +604,20 @@ We trust that you are familiar with HKUST's Honor Code. If not, refer to
 Please read the [discussions section](https://github.com/CastleLab/COMP3021-2021Fall-PA1-Student-Version/discussions) to
 see if your question has already been asked/answered before.
 
+- *(Added 09-29)* **Q:** Why are some of my test cases ignored?
+
+  That is likely because some of your implementation is not correctly implemented.
+
+  For instance, if you have an incorrect implementation of `GameBoard`, some or all tests for `GameBoardController` will
+  be disabled, as the correctness of `GameBoardController` depends on `GameBoard`.
+
+  For final grading, I will manually review submissions with ignored test cases, and perform a second grading pass to
+  give some points back if, for example, the `GameBoardController` is correctly implemented but the `GameBoard` is not.
+
+- *(Added 09-29)* **Q:** Can I not initialize or implement the provided instance variables?
+
+  As long as it does not affect your implementation of the `public` methods, feel free to do so.
+
 - *(Added 09-22)* **Q:** Can I import other classes in my implementation?
 
   You can import classes in your implementation, with the following caveats:
