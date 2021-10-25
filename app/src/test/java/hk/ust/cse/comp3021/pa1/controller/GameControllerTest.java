@@ -937,7 +937,7 @@ public class GameControllerTest {
 
         gameState.incrementNumMoves();
         final var moveToUndo = new MoveResult.Valid.Alive(
-                new Position(0, 2),
+                new Position(0, 3),
                 new Position(0, 0),
                 Collections.singletonList(new Position(0, 1)),
                 Collections.singletonList(new Position(0, 2))

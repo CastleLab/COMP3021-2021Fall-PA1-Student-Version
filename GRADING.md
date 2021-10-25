@@ -2,6 +2,11 @@
 
 This document outlines how your assignments are graded.
 
+## Updates
+
+- 10-25: Fixed erroneous final position for `GameControllerTest.testUndoMoveRestoresEntities`
+  - A regrade of all submissions will be performed at a later date.
+
 ## Changes from Student Version
 
 This repository is the same as the student version provided at the beginning of this assignment, with the following 
@@ -29,6 +34,8 @@ Assuming your submission is located in `$SUBMISSION` and this repository is loca
 This section outlines the procedure used for grading your PA1 submission.
 
 1. Download and extract the latest non-late submission from CASS or GitHub.
+    - By default we grade using the CASS version. We do not grade your GitHub version unless the CASS version is 
+      missing.
 2. Blend the submission with all test cases ([see here](#running-the-test-cases)).
 3. Clean the project by running `./gradlew clean` (or the `Clean` configuration in IntelliJ)
 4. Run each of the following Gradle configurations:
