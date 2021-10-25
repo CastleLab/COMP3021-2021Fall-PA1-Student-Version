@@ -50,6 +50,33 @@ public class DirectionTest {
     }
 
     @ParameterizedTest
+    @Tag("actual")
+    @EnumSource(Direction.class)
+    @DisplayName("getOffset - Test correct offset values")
+    void testDirectionOffset(final Direction direction) {
+        final var actual = direction.getOffset();
+
+        switch (direction) {
+            case UP -> {
+                assertEquals(-1, actual.dRow());
+                assertEquals(0, actual.dCol());
+            }
+            case DOWN -> {
+                assertEquals(1, actual.dRow());
+                assertEquals(0, actual.dCol());
+            }
+            case LEFT -> {
+                assertEquals(0, actual.dRow());
+                assertEquals(-1, actual.dCol());
+            }
+            case RIGHT -> {
+                assertEquals(0, actual.dRow());
+                assertEquals(1, actual.dCol());
+            }
+        }
+    }
+
+    @ParameterizedTest
     @Tag("sanity")
     @EnumSource(Direction.class)
     @DisplayName("Sanity Test - Test correct row offset values")

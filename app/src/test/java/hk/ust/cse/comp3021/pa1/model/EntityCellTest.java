@@ -110,6 +110,49 @@ public class EntityCellTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Set Entity - Not-Null to Null")
+    void testSetEntityFromNotNullToNull() {
+        final var player = new Player();
+        position = new Position(0, 0);
+        cell = new EntityCell(position, player);
+
+        final var prev = cell.setEntity(null);
+
+        assertNull(cell.entity);
+        assertSame(player, prev);
+        assertNull(player.getOwner());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Entity - Null to Not-Null")
+    void testSetEntityFromNullToNotNull() {
+        position = new Position(0, 0);
+        cell = new EntityCell(position);
+
+        final var player = new Player();
+        final var prev = cell.setEntity(player);
+
+        assertSame(player, cell.entity);
+        assertSame(cell, player.getOwner());
+        assertNull(prev);
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Entity - Null to Null")
+    void testSetEntityFromNullToNull() {
+        position = new Position(0, 0);
+        cell = new EntityCell(position);
+
+        final var prev = cell.setEntity(null);
+
+        assertNull(cell.entity);
+        assertNull(prev);
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Set Entity - Null to Not-Null")
     void testSetEntityFromNotNullToNotNull() {

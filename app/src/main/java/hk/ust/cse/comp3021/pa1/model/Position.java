@@ -3,6 +3,8 @@ package hk.ust.cse.comp3021.pa1.model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * A position on the game board.
  */
@@ -29,8 +31,7 @@ public record Position(int row, int col) {
      */
     @NotNull
     public Position offsetBy(final int dRow, final int dCol) {
-        // TODO
-        return null;
+        return new Position(row() + dRow, col() + dCol);
     }
 
     /**
@@ -42,8 +43,9 @@ public record Position(int row, int col) {
      */
     @NotNull
     public Position offsetBy(@NotNull final PositionOffset offset) {
-        // TODO
-        return null;
+        Objects.requireNonNull(offset);
+
+        return offsetBy(offset.dRow(), offset.dCol());
     }
 
     /**
@@ -59,8 +61,17 @@ public record Position(int row, int col) {
      */
     @Nullable
     public Position offsetByOrNull(final int dRow, final int dCol, final int numRows, final int numCols) {
-        // TODO
-        return null;
+        final var r = row() + dRow;
+        final var c = col() + dCol;
+
+        if (r < 0 || r >= numRows) {
+            return null;
+        }
+        if (c < 0 || c >= numCols) {
+            return null;
+        }
+
+        return new Position(r, c);
     }
 
     /**
@@ -75,7 +86,8 @@ public record Position(int row, int col) {
      */
     @Nullable
     public Position offsetByOrNull(@NotNull final PositionOffset offset, final int numRows, final int numCols) {
-        // TODO
-        return null;
+        Objects.requireNonNull(offset);
+
+        return offsetByOrNull(offset.dRow(), offset.dCol(), numRows, numCols);
     }
 }

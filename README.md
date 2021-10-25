@@ -11,6 +11,7 @@ questions before asking your TAs.*
 
 ## Quick Links
 
+- [Grading Scheme](GRADING.md)
 - [Skeleton Code Updates](#skeleton-code-updates)
 - [Game Elements](#game-elements)
 - [Game Representations](#game-representations)

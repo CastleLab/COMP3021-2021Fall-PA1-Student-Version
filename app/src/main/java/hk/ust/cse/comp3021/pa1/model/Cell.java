@@ -2,6 +2,8 @@ package hk.ust.cse.comp3021.pa1.model;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * A single cell on the game board.
  */
@@ -16,8 +18,7 @@ public abstract sealed class Cell implements BoardElement permits EntityCell, Wa
      * @param position The position where this cell belongs at.
      */
     protected Cell(@NotNull final Position position) {
-        // TODO
-        this.position = null;
+        this.position = Objects.requireNonNull(position);
     }
 
     /**
@@ -25,7 +26,6 @@ public abstract sealed class Cell implements BoardElement permits EntityCell, Wa
      */
     @NotNull
     public final Position getPosition() {
-        // TODO
-        return null;
+        return this.position;
     }
 }

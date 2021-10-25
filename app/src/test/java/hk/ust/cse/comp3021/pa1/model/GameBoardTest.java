@@ -153,6 +153,29 @@ public class GameBoardTest {
         assertThrows(IllegalArgumentException.class, () -> gameBoard = new GameBoard(rows, cols, cells));
     }
 
+    // PW.
+    // W*.
+    // ...
+    @Test
+    @Tag("actual")
+    @DisplayName("Instance Creation - Unreachable Gem in Corner")
+    void testGameBoardCreationUnreachableGemCorner() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, (pos) -> {
+            if (pos.equals(new Position(1, 0)) || pos.equals(new Position(0, 1))) {
+                return new Wall(pos);
+            } else {
+                return new EntityCell(pos);
+            }
+        });
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[1][1]).setEntity(new Gem());
+
+        assertThrows(IllegalArgumentException.class, () -> gameBoard = new GameBoard(rows, cols, cells));
+    }
+
     // P....
     // WWWW.
     // .....
@@ -180,6 +203,84 @@ public class GameBoardTest {
         assertThrows(IllegalArgumentException.class, () -> gameBoard = new GameBoard(rows, cols, cells));
     }
 
+    // *P*
+    // *.X
+    // *LX
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Row")
+    void testGetRow() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][1]).setEntity(new Player());
+        for (int i = 1; i < rows; ++i) {
+            ((EntityCell) cells[i][2]).setEntity(new Mine());
+        }
+        for (int i = 0; i < rows; ++i) {
+            ((EntityCell) cells[i][0]).setEntity(new Gem());
+        }
+        ((EntityCell) cells[2][1]).setEntity(new ExtraLife());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        final var row1 = gameBoard.getRow(0);
+        assertEquals(((EntityCell) cells[0][0]).getEntity(), ((EntityCell) row1[0]).getEntity());
+        assertEquals(((EntityCell) cells[0][1]).getEntity(), ((EntityCell) row1[1]).getEntity());
+        assertEquals(((EntityCell) cells[0][2]).getEntity(), ((EntityCell) row1[2]).getEntity());
+
+        final var row2 = gameBoard.getRow(1);
+        assertEquals(((EntityCell) cells[1][0]).getEntity(), ((EntityCell) row2[0]).getEntity());
+        assertEquals(((EntityCell) cells[1][1]).getEntity(), ((EntityCell) row2[1]).getEntity());
+        assertEquals(((EntityCell) cells[1][2]).getEntity(), ((EntityCell) row2[2]).getEntity());
+
+        final var row3 = gameBoard.getRow(2);
+        assertEquals(((EntityCell) cells[2][0]).getEntity(), ((EntityCell) row3[0]).getEntity());
+        assertEquals(((EntityCell) cells[2][1]).getEntity(), ((EntityCell) row3[1]).getEntity());
+        assertEquals(((EntityCell) cells[2][2]).getEntity(), ((EntityCell) row3[2]).getEntity());
+    }
+
+    // *P*
+    // *.X
+    // *LX
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Column")
+    void testGetCol() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][1]).setEntity(new Player());
+        for (int i = 1; i < rows; ++i) {
+            ((EntityCell) cells[i][2]).setEntity(new Mine());
+        }
+        for (int i = 0; i < rows; ++i) {
+            ((EntityCell) cells[i][0]).setEntity(new Gem());
+        }
+        ((EntityCell) cells[2][1]).setEntity(new ExtraLife());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        final var col1 = gameBoard.getCol(0);
+        assertEquals(((EntityCell) cells[0][0]).getEntity(), ((EntityCell) col1[0]).getEntity());
+        assertEquals(((EntityCell) cells[1][0]).getEntity(), ((EntityCell) col1[1]).getEntity());
+        assertEquals(((EntityCell) cells[2][0]).getEntity(), ((EntityCell) col1[2]).getEntity());
+
+        final var col2 = gameBoard.getCol(1);
+        assertEquals(((EntityCell) cells[0][1]).getEntity(), ((EntityCell) col2[0]).getEntity());
+        assertEquals(((EntityCell) cells[1][1]).getEntity(), ((EntityCell) col2[1]).getEntity());
+        assertEquals(((EntityCell) cells[2][1]).getEntity(), ((EntityCell) col2[2]).getEntity());
+
+        final var col3 = gameBoard.getCol(2);
+        assertEquals(((EntityCell) cells[0][2]).getEntity(), ((EntityCell) col3[0]).getEntity());
+        assertEquals(((EntityCell) cells[1][2]).getEntity(), ((EntityCell) col3[1]).getEntity());
+        assertEquals(((EntityCell) cells[2][2]).getEntity(), ((EntityCell) col3[2]).getEntity());
+    }
+
     @Test
     @Tag("provided")
     @DisplayName("Get Cell - int-overload")
@@ -201,6 +302,44 @@ public class GameBoardTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Get Cell - Position-overload")
+    void testGetCellWithPos() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        for (int r = 0; r < rows; ++r) {
+            for (int c = 0; c < cols; ++c) {
+                final var pos = new Position(r, c);
+                assertEquals(cells[r][c], gameBoard.getCell(pos), "Mismatch for pos=" + pos);
+            }
+        }
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Entity Cell - Valid using int-overload")
+    void testGetEntityCellWithIntsValid() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        final var entityCell = assertDoesNotThrow(() -> gameBoard.getEntityCell(0, 0));
+        assertEquals(gameBoard.getCell(0, 0), entityCell);
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Get Entity Cell - Invalid using int-overload")
     void testGetEntityCellWithIntsInvalid() {
@@ -215,6 +354,128 @@ public class GameBoardTest {
         gameBoard = new GameBoard(rows, cols, cells);
 
         assertThrows(IllegalArgumentException.class, () -> gameBoard.getEntityCell(0, 1));
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Entity Cell - Valid using Position-overload")
+    void testGetEntityCellWithPosValid() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        final var entityCell = assertDoesNotThrow(() -> gameBoard.getEntityCell(new Position(0, 0)));
+        assertEquals(gameBoard.getCell(0, 0), entityCell);
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Entity Cell - Invalid using Position-overload")
+    void testGetEntityCellWithPosInvalid() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        cells[0][1] = new Wall(new Position(0, 1));
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        assertThrows(IllegalArgumentException.class, () -> gameBoard.getEntityCell(new Position(0, 1)));
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Number of Rows")
+    void testGetNumRows() {
+        final var rows = 3;
+        final var cols = 4;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][3]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        assertEquals(rows, gameBoard.getNumRows());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Number of Columns")
+    void testGetNumCols() {
+        final var rows = 4;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        assertEquals(cols, gameBoard.getNumCols());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Player Instance")
+    void testGetPlayer() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        final var player = new Player();
+        ((EntityCell) cells[0][0]).setEntity(player);
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        assertEquals(player, gameBoard.getPlayer());
+    }
+
+    // P..
+    // ...
+    // ...
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Number of Gems - None")
+    void testGetNumGemsNone() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+        ((EntityCell) gameBoard.getCell(0, 2)).setEntity(null);
+
+        assertEquals(0, gameBoard.getNumGems());
+    }
+
+    // P.*
+    // ...
+    // ...
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Number of Gems - One")
+    void testGetNumGemsOne() {
+        final var rows = 3;
+        final var cols = 3;
+        final var cells = GameBoardUtils.createEmptyCellArray(rows, cols, EntityCell::new);
+
+        ((EntityCell) cells[0][0]).setEntity(new Player());
+        ((EntityCell) cells[0][2]).setEntity(new Gem());
+
+        gameBoard = new GameBoard(rows, cols, cells);
+
+        assertEquals(1, gameBoard.getNumGems());
     }
 
     // P**

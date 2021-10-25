@@ -33,8 +33,7 @@ public sealed class EntityCell extends Cell permits StopCell {
      * @param position The position where this cell belongs at.
      */
     public EntityCell(@NotNull final Position position) {
-        // TODO
-        super(null);
+        this(position, null);
     }
 
     /**
@@ -44,8 +43,8 @@ public sealed class EntityCell extends Cell permits StopCell {
      * @param initialEntity The initial entity present in this cell.
      */
     public EntityCell(@NotNull final Position position, @Nullable final Entity initialEntity) {
-        // TODO
-        this(null);
+        super(position);
+        setEntity(initialEntity);
     }
 
     /**
@@ -71,8 +70,26 @@ public sealed class EntityCell extends Cell permits StopCell {
      */
     @Nullable
     public Entity setEntity(@Nullable final Entity newEntity) {
-        // TODO
-        return null;
+        final var prevEntity = getEntity();
+
+        // If we used to own an entity, we no longer do after this method returns; Reset the owner of the entity
+        if (prevEntity != null) {
+            prevEntity.setOwner(null);
+        }
+
+        // Perform ownership transfer if the new entity was originally bound to another cell
+        if (newEntity != null && newEntity.getOwner() != null) {
+            this.entity = newEntity.getOwner().setEntity(null);
+        } else {
+            this.entity = newEntity;
+        }
+
+        // Finally, set the owner of the new entity to us
+        if (this.entity != null) {
+            this.entity.setOwner(this);
+        }
+
+        return prevEntity;
     }
 
     /**
@@ -80,8 +97,7 @@ public sealed class EntityCell extends Cell permits StopCell {
      */
     @Nullable
     public final Entity getEntity() {
-        // TODO
-        return null;
+        return entity;
     }
 
     @Override

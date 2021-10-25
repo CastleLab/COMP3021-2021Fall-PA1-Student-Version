@@ -74,6 +74,42 @@ public class EntityTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Set Owner - Null to Null")
+    void testSetOwnerNullToNull() {
+        final var prevOwner = entity.setOwner(null);
+
+        assertNull(entity.getOwner());
+        assertNull(prevOwner);
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Owner - Null to Not-Null")
+    void testSetOwnerNullToNotNull() {
+        final var entityCell = new EntityCell(new Position(0, 0));
+
+        final var prevOwner = entity.setOwner(entityCell);
+
+        assertEquals(entityCell, entity.getOwner());
+        assertNull(prevOwner);
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Owner - Not-Null to Null")
+    void testSetOwnerNotNullToNull() {
+        final var entityCell = new EntityCell(new Position(0, 0));
+
+        entity = new Player(entityCell);
+
+        final var prevOwner = entity.setOwner(null);
+
+        assertNull(entity.getOwner());
+        assertEquals(entityCell, prevOwner);
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Set Owner - Not-Null to Not-Null")
     void testSetOwnerNotNullToNotNull() {

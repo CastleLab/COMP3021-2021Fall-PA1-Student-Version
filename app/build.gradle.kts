@@ -6,6 +6,12 @@
  * User Manual available at https://docs.gradle.org/7.2/userguide/building_java_projects.html
  */
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
 plugins {
     java
 
@@ -86,6 +92,12 @@ tasks {
     create<Test>("testProvided") {
         useJUnitPlatform {
             includeTags("provided")
+        }
+    }
+
+    create<Test>("testActual") {
+        useJUnitPlatform {
+            includeTags("actual")
         }
     }
 }

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A {@link java.util.Stack}-like data structure to track all valid moves made by a player.
@@ -30,15 +31,19 @@ public class MoveStack {
      * @param move The move to push into this stack.
      */
     public void push(@NotNull final MoveResult move) {
-        // TODO
+        Objects.requireNonNull(move);
+        if (!(move instanceof MoveResult.Valid.Alive)) {
+            throw new IllegalArgumentException();
+        }
+
+        moves.add(move);
     }
 
     /**
      * @return Whether the stack is currently empty.
      */
     public boolean isEmpty() {
-        // TODO
-        return false;
+        return moves.isEmpty();
     }
 
     /**
@@ -48,16 +53,17 @@ public class MoveStack {
      */
     @NotNull
     public MoveResult pop() {
-        // TODO
-        return null;
+        assert peek() instanceof MoveResult.Valid.Alive;
+
+        ++popCount;
+        return moves.remove(moves.size() - 1);
     }
 
     /**
      * @return The number of {@link MoveStack#pop} calls invoked.
      */
     public int getPopCount() {
-        // TODO
-        return 0;
+        return popCount;
     }
 
     /**
@@ -73,7 +79,9 @@ public class MoveStack {
      */
     @NotNull
     public MoveResult peek() {
-        // TODO
-        return null;
+        final var topmostMove = moves.get(moves.size() - 1);
+        assert topmostMove instanceof MoveResult.Valid.Alive;
+
+        return topmostMove;
     }
 }

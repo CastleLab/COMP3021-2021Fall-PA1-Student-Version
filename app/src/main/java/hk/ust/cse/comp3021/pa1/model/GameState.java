@@ -4,6 +4,8 @@ import hk.ust.cse.comp3021.pa1.controller.GameBoardController;
 import hk.ust.cse.comp3021.pa1.view.GameBoardView;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Class for tracking the state of multiple game components.
  */
@@ -56,9 +58,7 @@ public class GameState {
      * @param gameBoard The game board to be managed by this instance.
      */
     public GameState(@NotNull final GameBoard gameBoard) {
-        // TODO
-        this.gameBoard = null;
-        this.initialNumOfGems = 0;
+        this(gameBoard, UNLIMITED_LIVES);
     }
 
     /**
@@ -73,9 +73,10 @@ public class GameState {
      *                  unlimited number of lives.
      */
     public GameState(@NotNull final GameBoard gameBoard, final int numLives) {
-        // TODO
-        this.gameBoard = null;
-        this.initialNumOfGems = 0;
+        this.gameBoard = Objects.requireNonNull(gameBoard);
+        this.numLives = numLives;
+
+        this.initialNumOfGems = this.gameBoard.getNumGems();
     }
 
     /**
@@ -88,8 +89,7 @@ public class GameState {
      * @return Whether the player has won the game.
      */
     public boolean hasWon() {
-        // TODO
-        return false;
+        return getNumGems() == 0;
     }
 
     /**
@@ -103,8 +103,7 @@ public class GameState {
      * @return Whether the player has lost the game.
      */
     public boolean hasLost() {
-        // TODO
-        return false;
+        return getNumLives() <= 0;
     }
 
     /**
@@ -115,8 +114,12 @@ public class GameState {
      * {@link Integer#MAX_VALUE}.
      */
     public int increaseNumLives(final int delta) {
-        // TODO
-        return 0;
+        if (hasUnlimitedLives()) {
+            return getNumLives();
+        }
+
+        numLives += delta;
+        return numLives;
     }
 
     /**
@@ -127,8 +130,15 @@ public class GameState {
      * {@link Integer#MAX_VALUE}.
      */
     public int decreaseNumLives(final int delta) {
-        // TODO
-        return 0;
+        if (hasUnlimitedLives()) {
+            return getNumLives();
+        }
+        if (getNumLives() - delta < 0) {
+            throw new RuntimeException();
+        }
+
+        numLives -= delta;
+        return numLives;
     }
 
     /**
@@ -138,8 +148,7 @@ public class GameState {
      * {@link Integer#MAX_VALUE}.
      */
     public int decrementNumLives() {
-        // TODO
-        return 0;
+        return decreaseNumLives(1);
     }
 
     /**
@@ -148,8 +157,7 @@ public class GameState {
      * @return The new number of moves taken by the player.
      */
     public int incrementNumMoves() {
-        // TODO
-        return 0;
+        return (++numMoves);
     }
 
     /**
@@ -158,32 +166,28 @@ public class GameState {
      * @return The new number of deaths of the player.
      */
     public int incrementNumDeaths() {
-        // TODO
-        return 0;
+        return (++numDeaths);
     }
 
     /**
      * @return The current number of deaths of the player.
      */
     public int getNumDeaths() {
-        // TODO
-        return 0;
+        return numDeaths;
     }
 
     /**
      * @return The current number of moves taken by the player.
      */
     public int getNumMoves() {
-        // TODO
-        return 0;
+        return numMoves;
     }
 
     /**
      * @return Whether the player has unlimited lives.
      */
     public boolean hasUnlimitedLives() {
-        // TODO
-        return false;
+        return numLives < 0;
     }
 
     /**
@@ -191,16 +195,14 @@ public class GameState {
      * {@link Integer#MAX_VALUE}.
      */
     public int getNumLives() {
-        // TODO
-        return 0;
+        return hasUnlimitedLives() ? Integer.MAX_VALUE : numLives;
     }
 
     /**
      * @return The number of gems that is still present on the game board.
      */
     public int getNumGems() {
-        // TODO
-        return 0;
+        return getGameBoard().getNumGems();
     }
 
     /**
@@ -218,24 +220,27 @@ public class GameState {
      * @return The current score of this game.
      */
     public int getScore() {
-        // TODO
-        return 0;
+        final var gameboardSize = getGameBoard().getNumRows() * getGameBoard().getNumCols();
+        final var gemAddition = (this.initialNumOfGems - getGameBoard().getNumGems()) * 10;
+        final var moveDeduction = getNumMoves();
+        final var undoDeduction = getMoveStack().getPopCount() * 2;
+        final var deathDeduction = getNumDeaths() * 4;
+
+        return gameboardSize + gemAddition - moveDeduction - undoDeduction - deathDeduction;
     }
 
     /**
      * @return A controller of the managed game board for mutation.
      */
     public GameBoardController getGameBoardController() {
-        // TODO
-        return null;
+        return new GameBoardController(getGameBoard());
     }
 
     /**
      * @return A read-only view of the managed game board.
      */
     public GameBoardView getGameBoardView() {
-        // TODO
-        return null;
+        return new GameBoardView(getGameBoard());
     }
 
     /**
@@ -243,8 +248,7 @@ public class GameState {
      */
     @NotNull
     public GameBoard getGameBoard() {
-        // TODO
-        return null;
+        return gameBoard;
     }
 
     /**
@@ -252,7 +256,6 @@ public class GameState {
      */
     @NotNull
     public MoveStack getMoveStack() {
-        // TODO
-        return null;
+        return moveStack;
     }
 }

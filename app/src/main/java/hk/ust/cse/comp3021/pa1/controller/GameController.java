@@ -5,6 +5,8 @@ import hk.ust.cse.comp3021.pa1.model.GameState;
 import hk.ust.cse.comp3021.pa1.model.MoveResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Controller for {@link hk.ust.cse.comp3021.pa1.InertiaTextGame}.
  *
@@ -23,8 +25,7 @@ public class GameController {
      * @param gameState The instance of {@link GameState} to control.
      */
     public GameController(@NotNull final GameState gameState) {
-        // TODO
-        this.gameState = null;
+        this.gameState = Objects.requireNonNull(gameState);
     }
 
     /**
@@ -34,8 +35,24 @@ public class GameController {
      * @return An instance of {@link MoveResult} indicating the result of the action.
      */
     public MoveResult processMove(@NotNull final Direction direction) {
-        // TODO
-        return null;
+        Objects.requireNonNull(direction);
+
+        final var result = this.gameState.getGameBoardController().makeMove(direction);
+
+        if (result instanceof MoveResult.Valid v) {
+            this.gameState.incrementNumMoves();
+
+            if (v instanceof MoveResult.Valid.Alive va) {
+                this.gameState.increaseNumLives(va.collectedExtraLives.size());
+
+                this.gameState.getMoveStack().push(va);
+            } else if (v instanceof MoveResult.Valid.Dead) {
+                this.gameState.incrementNumDeaths();
+                this.gameState.decrementNumLives();
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -44,7 +61,19 @@ public class GameController {
      * @return {@code false} if there are no steps to undo.
      */
     public boolean processUndo() {
-        // TODO
-        return false;
+        if (this.gameState.getMoveStack().isEmpty()) {
+            return false;
+        }
+
+        final var prevState = this.gameState.getMoveStack().pop();
+        // This condition is impossible under this implementation, but just do it anyways.
+        if (!(prevState instanceof final MoveResult.Valid.Alive aliveState)) {
+            return false;
+        }
+
+        this.gameState.decreaseNumLives(aliveState.collectedExtraLives.size());
+
+        this.gameState.getGameBoardController().undoMove(aliveState);
+        return true;
     }
 }

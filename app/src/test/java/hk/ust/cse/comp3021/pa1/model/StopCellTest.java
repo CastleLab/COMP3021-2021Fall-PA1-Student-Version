@@ -62,6 +62,60 @@ public class StopCellTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Set Entity - Player")
+    void testSetEntityToPlayer() {
+        position = new Position(0, 0);
+        cell = new StopCell(position);
+
+        final var player = new Player();
+        assertDoesNotThrow(() -> cell.setEntity(player));
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Player - Not-Null to Null")
+    void testSetPlayerFromNotNullToNull() {
+        final var player = new Player();
+        position = new Position(0, 0);
+        cell = new StopCell(position, player);
+
+        final var prev = cell.setPlayer(null);
+
+        assertNull(cell.entity);
+        assertSame(player, prev);
+        assertNull(player.getOwner());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Player - Null to Not-Null")
+    void testSetPlayerFromNullToNotNull() {
+        position = new Position(0, 0);
+        cell = new StopCell(position);
+
+        final var player = new Player();
+        final var prev = cell.setPlayer(player);
+
+        assertSame(player, cell.entity);
+        assertSame(cell, player.getOwner());
+        assertNull(prev);
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Set Player - Null to Null")
+    void testSetPlayerFromNullToNull() {
+        position = new Position(0, 0);
+        cell = new StopCell(position);
+
+        final var prev = cell.setPlayer(null);
+
+        assertNull(cell.entity);
+        assertNull(prev);
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Set Player - Null to Not-Null")
     void testSetPlayerFromNotNullToNotNull() {

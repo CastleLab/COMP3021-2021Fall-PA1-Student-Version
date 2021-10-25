@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The result after moving a player.
@@ -34,10 +35,9 @@ public abstract sealed class MoveResult {
          * @param origPosition The original {@link Position} of the player before moving.
          */
         private Valid(@NotNull final Position newPosition, @NotNull final Position origPosition) {
-            // TODO
-            super(null);
+            super(newPosition);
 
-            this.origPosition = null;
+            this.origPosition = Objects.requireNonNull(origPosition);
         }
 
         /**
@@ -86,11 +86,10 @@ public abstract sealed class MoveResult {
                          @NotNull final List<Position> collectedGems,
                          @NotNull final List<Position> collectedExtraLives
             ) {
-                // TODO
-                super(null, null);
+                super(newPosition, origPosition);
 
-                this.collectedGems = null;
-                this.collectedExtraLives = null;
+                this.collectedGems = Collections.unmodifiableList(Objects.requireNonNull(collectedGems));
+                this.collectedExtraLives = Collections.unmodifiableList(Objects.requireNonNull(collectedExtraLives));
             }
         }
 
@@ -120,10 +119,9 @@ public abstract sealed class MoveResult {
              *                     dies from).
              */
             public Dead(@NotNull final Position newPosition, @NotNull final Position minePosition) {
-                // TODO
-                super(null, null);
+                super(newPosition, newPosition);
 
-                this.minePosition = null;
+                this.minePosition = Objects.requireNonNull(minePosition);
             }
         }
     }
@@ -145,8 +143,7 @@ public abstract sealed class MoveResult {
          *                    original position before the move.
          */
         public Invalid(@NotNull final Position newPosition) {
-            // TODO
-            super(null);
+            super(newPosition);
         }
     }
 
@@ -156,8 +153,7 @@ public abstract sealed class MoveResult {
      * @param newPosition The new {@link Position} of the player after making the move.
      */
     private MoveResult(@NotNull final Position newPosition) {
-        // TODO
-        this.newPosition = null;
+        this.newPosition = Objects.requireNonNull(newPosition);
     }
 }
 

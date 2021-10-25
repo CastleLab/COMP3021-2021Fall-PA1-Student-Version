@@ -98,6 +98,36 @@ public class GameStateTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Instance Creation - Unlimited Lives using Two-Arg constructor")
+    void testNegativeNumLivesCreationIsUnlimitedLives() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard, GameState.UNLIMITED_LIVES);
+
+        assertFalse(gameState.hasWon());
+        assertFalse(gameState.hasLost());
+        assertEquals(0, gameState.getNumDeaths());
+        assertEquals(0, gameState.getNumMoves());
+        assertTrue(gameState.hasUnlimitedLives());
+        assertEquals(Integer.MAX_VALUE, gameState.getNumLives());
+        assertEquals(1, gameState.getNumGems());
+        assertEquals(4, gameState.getScore());
+        assertSame(gameBoard, gameState.getGameBoard());
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Instance Creation - Limited Lives")
     void testCreationLimitedLives() {
@@ -176,6 +206,32 @@ public class GameStateTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Lives Increase - Unlimited Lives")
+    void testIncreaseNumLivesNoOpWhenUnlimitedLives() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        assumeTrue(gameState.hasUnlimitedLives());
+
+        final var newNumLives = gameState.increaseNumLives(1);
+        assertEquals(Integer.MAX_VALUE, newNumLives);
+        assertEquals(Integer.MAX_VALUE, gameState.getNumLives());
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Lives Increase - Limited Lives")
     void testIncreaseNumLivesWhenNotUnlimitedLives() {
@@ -202,6 +258,32 @@ public class GameStateTest {
     }
 
     @Test
+    @Tag("actual")
+    @DisplayName("Lives Decrease - Unlimited Lives")
+    void testDecreaseNumLivesNoOpWhenUnlimitedLives() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        assumeTrue(gameState.hasUnlimitedLives());
+
+        final var newNumLives = gameState.decreaseNumLives(1);
+        assertEquals(Integer.MAX_VALUE, newNumLives);
+        assertEquals(Integer.MAX_VALUE, gameState.getNumLives());
+    }
+
+    @Test
     @Tag("provided")
     @DisplayName("Lives Decrease - Limited Lives")
     void testDecreaseNumLivesWhenNotUnlimitedLives() {
@@ -225,6 +307,107 @@ public class GameStateTest {
         final var newNumLives = gameState.decreaseNumLives(1);
         assertEquals(2, newNumLives);
         assertEquals(2, gameState.getNumLives());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Lives Decrement - Unlimited Lives")
+    void testDecrementNumLivesEqualToDecreaseByOneWithUnlimitedLives() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        assumeTrue(gameState.hasUnlimitedLives());
+
+        final var newNumLives = gameState.decrementNumLives();
+        assertEquals(Integer.MAX_VALUE, newNumLives);
+        assertEquals(Integer.MAX_VALUE, gameState.getNumLives());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Lives Decrement - Limited Lives")
+    void testDecrementNumLivesEqualToDecreaseByOneWithLimitedLives() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard, 3);
+
+        assumeFalse(gameState.hasUnlimitedLives());
+
+        final var newNumLives = gameState.decrementNumLives();
+        assertEquals(2, newNumLives);
+        assertEquals(2, gameState.getNumLives());
+        assertEquals(4, gameState.getScore());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Increment Number of Moves")
+    void testIncrementNumMoves() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        final var newNumMoves = gameState.incrementNumMoves();
+        assertEquals(1, newNumMoves);
+        assertEquals(1, gameState.getNumMoves());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Increment Number of Deaths")
+    void testIncrementNumDeaths() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        final var newNumDeaths = gameState.incrementNumDeaths();
+        assertEquals(1, newNumDeaths);
+        assertEquals(1, gameState.getNumDeaths());
     }
 
     @Test
@@ -319,6 +502,116 @@ public class GameStateTest {
         gameBoard.getEntityCell(new Position(0, 2)).setEntity(null);
 
         assertEquals(110, gameState.getScore());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Score - Moves Deducts Points")
+    void testScoreMovesDeductsPoints() {
+        gameBoard = GameBoardUtils.createGameBoard(2, 2, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else if (pos.equals(new Position(1, 0))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        assumeTrue(gameState.getScore() == 4);
+
+        gameState.incrementNumMoves();
+
+        assumeTrue(gameState.getNumMoves() == 1);
+
+        assertEquals(3, gameState.getScore());
+
+        gameState.incrementNumMoves();
+
+        assumeTrue(gameState.getNumMoves() == 2);
+
+        assertEquals(2, gameState.getScore());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Score - Death Deducts Points")
+    void testScoreDeathsDeductsPoints() {
+        gameBoard = GameBoardUtils.createGameBoard(10, 10, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else if (pos.equals(new Position(1, 0))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        assumeTrue(gameState.getScore() == 100);
+
+        gameState.incrementNumDeaths();
+
+        assumeTrue(gameState.getNumDeaths() == 1);
+
+        assertEquals(96, gameState.getScore());
+
+        gameState.incrementNumDeaths();
+
+        assumeTrue(gameState.getNumDeaths() == 2);
+
+        assertEquals(92, gameState.getScore());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Score - Death Deducts Points")
+    void testScoreUndoDeductsPoints() {
+        gameBoard = GameBoardUtils.createGameBoard(10, 10, (pos) -> {
+            final Entity entity;
+            if (pos.equals(new Position(0, 0))) {
+                entity = new Player();
+            } else if (pos.equals(new Position(0, 1))) {
+                entity = new Gem();
+            } else if (pos.equals(new Position(0, 2))) {
+                entity = new Gem();
+            } else {
+                entity = null;
+            }
+
+            return new EntityCell(pos, entity);
+        });
+
+        gameState = new GameState(gameBoard);
+
+        assumeTrue(gameState.getScore() == 100);
+
+        final var moveStack = gameState.getMoveStack();
+
+        moveStack.push(new MoveResult.Valid.Alive(new Position(1, 0), new Position(2, 0)));
+        moveStack.pop();
+
+        assumeTrue(gameState.getMoveStack().isEmpty());
+
+        assertEquals(98, gameState.getScore());
+
+        moveStack.push(new MoveResult.Valid.Alive(new Position(1, 0), new Position(2, 0)));
+        moveStack.pop();
+
+        assertEquals(96, gameState.getScore());
     }
 
     @AfterEach

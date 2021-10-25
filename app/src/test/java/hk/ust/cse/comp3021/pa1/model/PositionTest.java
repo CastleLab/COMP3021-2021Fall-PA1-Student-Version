@@ -73,6 +73,29 @@ public class PositionTest {
         assertThrows(IllegalArgumentException.class, () -> position = new Position(-1, -1));
     }
 
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Offset - int-overload")
+    void testOffsetByInts() {
+        final var origPosition = new Position(3, 5);
+        position = origPosition.offsetBy(1, -3);
+
+        assertEquals(4, position.row());
+        assertEquals(2, position.col());
+    }
+
+    @Test
+    @Tag("actual")
+    @DisplayName("Get Offset - PositionOffset-overload")
+    void testOffsetByPosOffset() {
+        final var origPosition = new Position(3, 5);
+        final var offset = new PositionOffset(1, -3);
+        position = origPosition.offsetBy(offset);
+
+        assertEquals(4, position.row());
+        assertEquals(2, position.col());
+    }
+
     @AfterEach
     void tearDown() {
         position = null;

@@ -93,6 +93,41 @@ public class MoveStackTest {
         assertEquals(1, moveStack.getPopCount());
     }
 
+    @Test
+    @Tag("actual")
+    @DisplayName("Push-Pop Moves in LIFO Order")
+    void testPushPopInLIFOOrder() {
+        final var move1 = new MoveResult.Valid.Alive(
+                new Position(1, 0),
+                new Position(0, 0)
+        );
+        final var move2 = new MoveResult.Valid.Alive(
+                new Position(2, 0),
+                new Position(1, 0)
+        );
+        final var move3 = new MoveResult.Valid.Alive(
+                new Position(3, 0),
+                new Position(2, 0)
+        );
+
+        moveStack.push(move1);
+        moveStack.push(move2);
+        moveStack.push(move3);
+
+        assertEquals(move3, moveStack.peek());
+
+        assertEquals(move3, moveStack.pop());
+        assertEquals(1, moveStack.getPopCount());
+
+        assertEquals(move2, moveStack.pop());
+        assertEquals(2, moveStack.getPopCount());
+
+        assertEquals(move1, moveStack.pop());
+        assertEquals(3, moveStack.getPopCount());
+
+        assertTrue(moveStack.isEmpty());
+    }
+
     @AfterEach
     void tearDown() {
         moveStack = null;
