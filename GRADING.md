@@ -82,6 +82,14 @@ For your information, there are:
 - 67 Provided Tests
 - 72 Hidden Tests
 
+### Additional Penalties
+
+One mark will be deducted from the final score if any of the following conditions are true:
+
+- The submission to CASS and GitHub contains different code which causes the number of failing test cases and/or 
+  CheckStyle errors to differ.
+- No `github-url.txt` is provided in the CASS submission.
+
 ## Appeal Guidelines
 
 In general, you may appeal the grading for one of the following reasons:
