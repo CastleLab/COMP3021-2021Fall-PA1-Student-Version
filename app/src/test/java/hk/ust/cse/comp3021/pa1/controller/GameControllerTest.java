@@ -713,7 +713,7 @@ public class GameControllerTest {
     @ValueSource(booleans = {true, false})
     @DisplayName("Undo Move - No moves")
     void testUndoFromEmptyStack(final boolean hasUnlimitedLives) {
-        gameBoard = GameBoardUtils.createGameBoard(1, 3, (pos) -> {
+        gameBoard = GameBoardUtils.createGameBoard(2, 3, (pos) -> {
             final Entity entity;
             if (pos.equals(new Position(0, 0))) {
                 entity = new Player();

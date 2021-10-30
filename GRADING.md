@@ -4,8 +4,12 @@ This document outlines how your assignments are graded.
 
 ## Updates
 
+- 10-30: Fixes two more incorrectly defined `GameBoard` for test cases
+  - `GameBoardControllerTest.testMakeValidMoveToMineCrossingOtherPickUps`
+  - `GameControllerTest.testUndoFromEmptyStack`
+  - All submissions have been regraded with the updated test suite
 - 10-25: Fixed erroneous final position for `GameControllerTest.testUndoMoveRestoresEntities`
-  - A regrade of all submissions will be performed at a later date.
+  - ~~A regrade of all submissions will be performed at a later date.~~
 
 ## Changes from Student Version
 
